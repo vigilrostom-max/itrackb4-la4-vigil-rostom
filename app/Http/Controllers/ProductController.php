@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 class ProductController extends Controller
 {
-    // PART A: the data lives here now, in ONE private helper.
-    // Every method below asks this helper for the products.
-    // The key (1, 2, 3...) matches each product's id, so one product
-    // can be found with a single lookup instead of a loop.
     private function getProducts()
     {
         return [
@@ -22,7 +20,6 @@ class ProductController extends Controller
         ];
     }
 
-    // The list page. Same as LA2, but the data now comes from the helper.
     public function index()
     {
         $products = $this->getProducts();
@@ -30,12 +27,21 @@ class ProductController extends Controller
         return view('products.index', ['products' => $products]);
     }
 
-    // PART B: the detail page, for example /products/7
-    public function show($id)
+    public function create()
+    {
+        //
+    }
+
+    public function store(Request $request)
+    {
+        //
+    }
+
+    public function show(string $id)
     {
         $products = $this->getProducts();
 
-        // Is there a product with this id? If not, stop and show a proper 404 page.
+        // No product with this id? Show a proper 404 page.
         if (!isset($products[$id])) {
             abort(404);
         }
@@ -46,26 +52,39 @@ class ProductController extends Controller
         ]);
     }
 
-    // PART C: the featured page, /products/featured (no id in the URL)
+    public function edit(string $id)
+    {
+        //
+    }
+
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    public function destroy(string $id)
+    {
+        //
+    }
+
+    // ---------- MY EXTRA METHODS (not one of the seven) ----------
+
     public function featured()
     {
         $products = $this->getProducts();
 
         return view('products.show', [
-            'product' => $products[5],   // product 5 (3-in-1 Coffee) is my featured pick
+            'product' => $products[5],  
             'heading' => 'Featured Product',
         ]);
     }
 
-    // PART D: the filter page, for example /products/filter/Drinks
-    // The "= null" makes the value optional. No value means "show everything".
     public function filter($category = null)
     {
         $products = $this->getProducts();
         $matches = [];
 
         foreach ($products as $product) {
-            // No category typed? Keep every product. Otherwise keep only the matching ones.
             if ($category === null || strtolower($product['category']) === strtolower($category)) {
                 $matches[] = $product;
             }
